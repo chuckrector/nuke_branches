@@ -4,6 +4,8 @@
 #include <termios.h>    // termios, tcgetattr, tcsetattr
 #include <string.h>     // strncmp
 
+typedef struct termios termios;
+
 #define ArrayCount(Array) (sizeof(Array)/sizeof((Array)[0]))
 
 static char Memory[1024 * 1024];
@@ -23,6 +25,7 @@ enum key
     Key_Enter,
     Key_Q,
 };
+typedef enum key key;
 
 enum clear_codes
 {
@@ -51,8 +54,8 @@ GetKey()
        because, e.g. ESC is the single byte 27 and arrow keys are the
        byte 27 followed by other codes, etc.
        
-       TODO(chuck): Is there a more streamlined way to do this?  Like
-       without having to parse multi-byte sequences? */
+        TODO(chuck): Is there a more streamlined way to do this?  Like
+        without having to parse multi-byte sequences? */
     int BytesRead = read(ConsoleHandle, Buffer, 4);
 
     // printf("%d bytes ", BytesRead);
@@ -183,7 +186,7 @@ main(int ArgCount, char **Args)
         PrintMenu(0);
 
         int SelectedIndex = 0;
-        bool Running = true;
+        int Running = 1;
         while(Running)
         {
             key Key = GetKey();
@@ -192,7 +195,7 @@ main(int ArgCount, char **Args)
                 case Key_Q:
                 case Key_Escape:
                 {
-                    Running = false;
+                    Running = 0;
                 } break;
 
                 case Key_Up:
